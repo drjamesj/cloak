@@ -2,7 +2,7 @@
 
 ![WIP](https://img.shields.io/badge/status-work_in_progress-yellow)
 
-Cloak is a pure PHP HTTP and TLS client that allows for lower-level control over HTTP and TLS fingerprints.
+Cloak is a pure PHP HTTP and TLS client that allows for low-level control over HTTP and TLS fingerprints.
 
 ## Installing Cloak
 
