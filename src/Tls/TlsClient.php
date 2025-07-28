@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Cloak\Tls;
 
 use Cloak\Tcp\TcpClient;
-use Cloak\Tls\Data\TLSPlaintext;
 use Cloak\Tls\Enums\ApplicationLayerProtocol;
 use Cloak\Tls\Enums\CipherSuite;
 use Cloak\Tls\Enums\ContentType;
@@ -15,6 +14,7 @@ use Cloak\Tls\Enums\NamedGroup;
 use Cloak\Tls\Enums\ProtocolVersion;
 use Cloak\Tls\Enums\SignatureAlgorithm;
 use Cloak\Tls\Extensions\ApplicationLayerProtocolNegotiation;
+use Cloak\Tls\Extensions\Grease;
 use Cloak\Tls\Extensions\KeyShare;
 use Cloak\Tls\Extensions\ServerName;
 use Cloak\Tls\Extensions\SignatureAlgorithms;
@@ -368,38 +368,41 @@ class TlsClient
     {
         $this->clientHello = ClientHello::make()
             ->withCipherSuites(
+                Grease::cipherSuite(),
                 CipherSuite::TLS_AES_128_GCM_SHA256,
                 CipherSuite::TLS_AES_256_GCM_SHA384,
                 CipherSuite::TLS_CHACHA20_POLY1305_SHA256,
             )->withExtensions(
-                ServerName::make($this->tcpClient->getHost()),
-                SupportedVersions::make(
-                    ProtocolVersion::TLS_1_3,
-                    ProtocolVersion::TLS_1_2,
+                Grease::randomiseExtensions(
+                    ServerName::make($this->tcpClient->getHost()),
+                    SupportedVersions::make(
+                        ProtocolVersion::TLS_1_3,
+                        ProtocolVersion::TLS_1_2,
+                    ),
+                    KeyShare::make(
+                        NamedGroup::X25519,
+                        $this->getClientPublicKey(),
+                    ),
+                    SignatureAlgorithms::make(
+                        SignatureAlgorithm::ECDSA_SECP256R1_SHA256,
+                        SignatureAlgorithm::ECDSA_SECP384R1_SHA384,
+                        SignatureAlgorithm::ECDSA_SECP521R1_SHA512,
+                        SignatureAlgorithm::RSA_PSS_RSAE_SHA256,
+                        SignatureAlgorithm::RSA_PSS_RSAE_SHA384,
+                        SignatureAlgorithm::RSA_PSS_RSAE_SHA512,
+                        SignatureAlgorithm::RSA_PKCS1_SHA256,
+                        SignatureAlgorithm::RSA_PKCS1_SHA384,
+                        SignatureAlgorithm::RSA_PKCS1_SHA512,
+                    ),
+                    SupportedGroups::make(
+                        NamedGroup::X25519,
+                        NamedGroup::SECP256R1,
+                    ),
+                    ApplicationLayerProtocolNegotiation::make([
+                        // ApplicationLayerProtocol::HTTP_2,
+                        ApplicationLayerProtocol::HTTP_1_1,
+                    ]),
                 ),
-                KeyShare::make(
-                    NamedGroup::X25519,
-                    $this->getClientPublicKey(),
-                ),
-                SignatureAlgorithms::make(
-                    SignatureAlgorithm::ECDSA_SECP256R1_SHA256,
-                    SignatureAlgorithm::ECDSA_SECP384R1_SHA384,
-                    SignatureAlgorithm::ECDSA_SECP521R1_SHA512,
-                    SignatureAlgorithm::RSA_PSS_RSAE_SHA256,
-                    SignatureAlgorithm::RSA_PSS_RSAE_SHA384,
-                    SignatureAlgorithm::RSA_PSS_RSAE_SHA512,
-                    SignatureAlgorithm::RSA_PKCS1_SHA256,
-                    SignatureAlgorithm::RSA_PKCS1_SHA384,
-                    SignatureAlgorithm::RSA_PKCS1_SHA512,
-                ),
-                SupportedGroups::make(
-                    NamedGroup::X25519,
-                    NamedGroup::SECP256R1,
-                ),
-                ApplicationLayerProtocolNegotiation::make([
-                    // ApplicationLayerProtocol::HTTP_2,
-                    ApplicationLayerProtocol::HTTP_1_1,
-                ]),
             );
 
         $this->transcript .= $this->clientHello->toBytes();

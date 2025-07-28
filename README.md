@@ -23,3 +23,8 @@ echo $response->getStatus(); // 200
 echo $response->getHeader('content-type'); // application/json; charset=utf-8
 echo $response->getBody(); // '{...}'
 ```
+
+## Resources
+
+- [IETF RFC 8446 - The Transport Layer Security (TLS) Protocol Version 1.3](https://datatracker.ietf.org/doc/html/rfc8446)
+- [IETF RFC 8701 - Applying Generate Random Extensions And Sustain Extensibility (GREASE) to TLS Extensibility](https://datatracker.ietf.org/doc/html/rfc8701)
