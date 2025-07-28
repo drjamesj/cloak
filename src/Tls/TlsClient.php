@@ -16,6 +16,7 @@ use Cloak\Tls\Enums\SignatureAlgorithm;
 use Cloak\Tls\Extensions\ApplicationLayerProtocolNegotiation;
 use Cloak\Tls\Extensions\Grease;
 use Cloak\Tls\Extensions\KeyShare;
+use Cloak\Tls\Extensions\KeyShareEntry;
 use Cloak\Tls\Extensions\ServerName;
 use Cloak\Tls\Extensions\SignatureAlgorithms;
 use Cloak\Tls\Extensions\SupportedGroups;
@@ -205,7 +206,7 @@ class TlsClient
                 if ($msg instanceof ServerHello) {
                     /** @var \Cloak\Tls\Extensions\KeyShare $keyShareExtension */
                     $keyShareExtension = $msg->findExtension(ExtensionType::KEY_SHARE);
-                    $serverPublicKey = $keyShareExtension->key_exchange;
+                    $serverPublicKey = $keyShareExtension->entries[0]->key_exchange;
 
                     $sharedSecret = sodium_crypto_scalarmult(
                         $this->getClientPrivateKey(),
@@ -372,16 +373,35 @@ class TlsClient
                 CipherSuite::TLS_AES_128_GCM_SHA256,
                 CipherSuite::TLS_AES_256_GCM_SHA384,
                 CipherSuite::TLS_CHACHA20_POLY1305_SHA256,
+                CipherSuite::TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+                CipherSuite::TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+                CipherSuite::TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+                CipherSuite::TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+                CipherSuite::TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
+                CipherSuite::TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256,
+                CipherSuite::TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,
+                CipherSuite::TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,
+                CipherSuite::TLS_RSA_WITH_AES_128_GCM_SHA256,
+                CipherSuite::TLS_RSA_WITH_AES_256_GCM_SHA384,
+                CipherSuite::TLS_RSA_WITH_AES_128_CBC_SHA,
+                CipherSuite::TLS_RSA_WITH_AES_256_CBC_SHA,
             )->withExtensions(
-                Grease::randomiseExtensions(
+                ...Grease::randomiseExtensions(
                     ServerName::make($this->tcpClient->getHost()),
                     SupportedVersions::make(
+                        Grease::randomGreaseValue(),
                         ProtocolVersion::TLS_1_3,
                         ProtocolVersion::TLS_1_2,
                     ),
                     KeyShare::make(
-                        NamedGroup::X25519,
-                        $this->getClientPublicKey(),
+                        KeyShareEntry::make(
+                            NamedGroup::X25519,
+                            $this->getClientPublicKey(),
+                        ),
+                        KeyShareEntry::make(
+                            Grease::randomGreaseValue(),
+                            uint8(0x00),
+                        )
                     ),
                     SignatureAlgorithms::make(
                         SignatureAlgorithm::ECDSA_SECP256R1_SHA256,
@@ -395,6 +415,7 @@ class TlsClient
                         SignatureAlgorithm::RSA_PKCS1_SHA512,
                     ),
                     SupportedGroups::make(
+                        Grease::randomGreaseValue(),
                         NamedGroup::X25519,
                         NamedGroup::SECP256R1,
                     ),

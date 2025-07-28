@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Cloak\Tls\Handshake\Messages;
 
 use Cloak\Tls\Enums\CipherSuite;
+use Cloak\Tls\Enums\GreaseValue;
 use Cloak\Tls\Enums\HandshakeType;
 use Cloak\Tls\Enums\ProtocolVersion;
 use Cloak\Tls\Extensions\BaseExtension;
@@ -74,7 +75,7 @@ class ClientHello extends BaseMessage
 
     private function cipherSuitesToBytes(): string
     {
-        $cipherSuiteList = implode(array_map(fn(CipherSuite $cipherSuite) => uint16($cipherSuite->value), $this->cipher_suites));
+        $cipherSuiteList = implode(array_map(fn(CipherSuite|GreaseValue $cipherSuite) => uint16($cipherSuite->value), $this->cipher_suites));
 
         return uint16(strlen($cipherSuiteList)) . $cipherSuiteList;
     }

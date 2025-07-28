@@ -4,35 +4,56 @@ declare(strict_types=1);
 
 namespace Cloak\Tls\Extensions;
 
+use Cloak\Tls\Enums\GreaseValue;
+use RuntimeException;
+
 class Grease
 {
-    public static array $cipher_suites = [
-        0x0a0a,
-        0x1a1a,
-        0x2a2a,
-        0x3a3a,
-        0x4a4a,
-        0x5a5a,
-        0x6a6a,
-        0x7a7a,
-        0x8a8a,
-        0x9a9a,
-        0xaaaa,
-        0xbaba,
-        0xcaca,
-        0xdada,
-        0xeaea,
-        0xfafa,
-    ];
+    /** @var int[] */
+    private static array $used = [];
 
-    public static function cipherSuite(): string
+    public static function randomGreaseValue(): GreaseValue
     {
-        return self::$cipher_suites[array_rand(self::$cipher_suites)];
+        $values = array_map(fn(GreaseValue $value) => $value->value, GreaseValue::cases());
+
+        $available = array_diff($values, self::$used);
+
+        if (empty($available)) {
+            throw new RuntimeException('No available GREASE values');
+        }
+
+        $selected = $available[array_rand($available)];
+
+        self::$used[] = $selected;
+
+        return GreaseValue::from($selected);
     }
 
-    public static function extension(): string
+    public static function cipherSuite(): GreaseValue
     {
-        // todo
+        $selected = self::randomGreaseValue();
+
+        self::$used[] = $selected->value;
+
+        return $selected;
+    }
+
+    public static function extension(): BaseExtension
+    {
+        return new class(self::randomGreaseValue()) extends BaseExtension {
+            public function __construct(
+                public readonly GreaseValue $grease_value,
+            ) {
+                //
+            }
+
+            public function toBytes(): string
+            {
+                $payload = uint16(0x00);
+
+                return uint16($this->grease_value->value) . uint16(strlen($payload)) . $payload;
+            }
+        };
     }
 
     /**
@@ -49,6 +70,7 @@ class Grease
         return [
             self::extension(),
             ...$extensions,
+            self::extension(),
         ];
     }
 }
