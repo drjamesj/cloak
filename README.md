@@ -1,4 +1,4 @@
-# Cloak, low-level PHP HTTP and TLS 1.3 Client
+# Cloak, a low-level HTTP and TLS 1.3 Client in PHP
 
 ![WIP](https://img.shields.io/badge/status-work_in_progress-yellow)
 
