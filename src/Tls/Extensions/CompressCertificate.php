@@ -15,7 +15,8 @@ class CompressCertificate extends BaseExtension
      */
     public function __construct(
         public array $compression_methods,
-    ) {}
+    ) {
+    }
 
     /**
      * Create a new instance of CompressCertificate.
@@ -29,7 +30,7 @@ class CompressCertificate extends BaseExtension
 
     public function toBytes(): string
     {
-        $compression_methods = implode(array_map(fn(int $format) => uint16($format), $this->compression_methods));
+        $compression_methods = implode(array_map(fn (int $format) => uint16($format), $this->compression_methods));
         $list = uint8(strlen($compression_methods)) . $compression_methods;
 
         return uint16($this->extension_type->value) . uint16(strlen($list)) . $list;

@@ -10,7 +10,9 @@ class SignedCertificateTimestamp extends BaseExtension
 {
     public ExtensionType $extension_type = ExtensionType::SIGNED_CERTIFICATE_TIMESTAMP;
 
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     public static function make(): self
     {

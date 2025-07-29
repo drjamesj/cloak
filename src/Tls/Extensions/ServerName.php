@@ -12,7 +12,8 @@ class ServerName extends BaseExtension
 
     public function __construct(
         public string $host_name,
-    ) {}
+    ) {
+    }
 
     public static function make(string $host_name): self
     {

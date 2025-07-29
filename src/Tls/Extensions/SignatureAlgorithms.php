@@ -16,7 +16,8 @@ class SignatureAlgorithms extends BaseExtension
      */
     public function __construct(
         public array $algorithms,
-    ) {}
+    ) {
+    }
 
     /**
      * Create a new instance of SignatureAlgorithms.
@@ -30,7 +31,7 @@ class SignatureAlgorithms extends BaseExtension
 
     public function toBytes(): string
     {
-        $algorithms = implode(array_map(fn(SignatureAlgorithm $algorithm) => uint16($algorithm->value), $this->algorithms));
+        $algorithms = implode(array_map(fn (SignatureAlgorithm $algorithm) => uint16($algorithm->value), $this->algorithms));
         $list = uint16(strlen($algorithms)) . $algorithms;
 
         return uint16($this->extension_type->value) . uint16(strlen($list)) . $list;

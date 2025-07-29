@@ -40,7 +40,7 @@ class Response
     /**
      * Get all headers as an associative array.
      * Keys are header names and values are header values.
-     * 
+     *
      * @return array<string, string>
      */
     public function getHeaders(): array

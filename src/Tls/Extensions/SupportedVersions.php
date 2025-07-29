@@ -18,7 +18,8 @@ class SupportedVersions extends BaseExtension
      */
     public function __construct(
         public array $versions,
-    ) {}
+    ) {
+    }
 
     /**
      * Create a new SupportedVersions instance with the given protocol versions.
@@ -32,7 +33,7 @@ class SupportedVersions extends BaseExtension
 
     public function toBytes(): string
     {
-        $versions = implode(array_map(fn(ProtocolVersion|GreaseValue $version) => uint16($version->value), $this->versions));
+        $versions = implode(array_map(fn (ProtocolVersion|GreaseValue $version) => uint16($version->value), $this->versions));
         $list = uint8(strlen($versions)) . $versions;
 
         return uint16($this->extension_type->value) . uint16(strlen($list)) . $list;
@@ -42,7 +43,7 @@ class SupportedVersions extends BaseExtension
     {
         return new self(
             versions: array_map(
-                fn($version) => ProtocolVersion::from(bytesToInt($version)),
+                fn ($version) => ProtocolVersion::from(bytesToInt($version)),
                 str_split($data, 2)
             )
         );

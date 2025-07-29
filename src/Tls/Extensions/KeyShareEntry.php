@@ -12,7 +12,8 @@ class KeyShareEntry
     public function __construct(
         public NamedGroup|GreaseValue $group,
         public string $key_exchange,
-    ) {}
+    ) {
+    }
 
     public static function make(NamedGroup|GreaseValue $group, string $key_exchange): self
     {

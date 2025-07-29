@@ -12,7 +12,8 @@ class SessionTicket extends BaseExtension
 
     public function __construct(
         public string $data,
-    ) {}
+    ) {
+    }
 
     /**
      * Create a new instance of SessionTicket.

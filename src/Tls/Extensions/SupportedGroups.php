@@ -17,7 +17,8 @@ class SupportedGroups extends BaseExtension
      */
     public function __construct(
         public array $named_group_list,
-    ) {}
+    ) {
+    }
 
     /**
      * Create a new instance of SupportedGroups.
@@ -31,7 +32,7 @@ class SupportedGroups extends BaseExtension
 
     public function toBytes(): string
     {
-        $named_group_list = implode(array_map(fn(NamedGroup|GreaseValue $named_group) => uint16($named_group->value), $this->named_group_list));
+        $named_group_list = implode(array_map(fn (NamedGroup|GreaseValue $named_group) => uint16($named_group->value), $this->named_group_list));
         $list = uint16(strlen($named_group_list)) . $named_group_list;
 
         return uint16($this->extension_type->value) . uint16(strlen($list)) . $list;

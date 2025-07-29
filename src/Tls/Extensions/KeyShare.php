@@ -16,11 +16,12 @@ class KeyShare extends BaseExtension
      */
     public function __construct(
         public array $entries,
-    ) {}
+    ) {
+    }
 
     /**
      * Create a new instance of KeyShare.
-     * 
+     *
      * @param \Cloak\Tls\Extensions\KeyShareEntry ...$entries
      */
     public static function make(KeyShareEntry ...$entries): self

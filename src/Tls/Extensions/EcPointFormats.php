@@ -17,7 +17,8 @@ class EcPointFormats extends BaseExtension
      */
     public function __construct(
         public array $elliptic_curve_point_formats,
-    ) {}
+    ) {
+    }
 
     /**
      * Create a new instance of EcPointFormats.
@@ -31,7 +32,7 @@ class EcPointFormats extends BaseExtension
 
     public function toBytes(): string
     {
-        $elliptic_curve_point_formats = implode(array_map(fn(int $format) => uint8($format), $this->elliptic_curve_point_formats));
+        $elliptic_curve_point_formats = implode(array_map(fn (int $format) => uint8($format), $this->elliptic_curve_point_formats));
         $list = uint8(strlen($elliptic_curve_point_formats)) . $elliptic_curve_point_formats;
 
         return uint16($this->extension_type->value) . uint16(strlen($list)) . $list;

@@ -16,7 +16,8 @@ class ApplicationLayerProtocolNegotiation extends BaseExtension
      */
     public function __construct(
         public array $protocols,
-    ) {}
+    ) {
+    }
 
     /**
      * Create a new instance of ApplicationLayerProtocolNegotiation.
@@ -30,7 +31,7 @@ class ApplicationLayerProtocolNegotiation extends BaseExtension
 
     public function toBytes(): string
     {
-        $protocols = implode(array_map(fn(ApplicationLayerProtocol $protocol) => uint8(strlen($protocol->value)) . $protocol->value, $this->protocols));
+        $protocols = implode(array_map(fn (ApplicationLayerProtocol $protocol) => uint8(strlen($protocol->value)) . $protocol->value, $this->protocols));
         $list = uint16(strlen($protocols)) . $protocols;
 
         return uint16($this->extension_type->value) . uint16(strlen($list)) . $list;

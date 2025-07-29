@@ -12,7 +12,8 @@ class ExtensionRenegotiationInfo extends BaseExtension
 
     public function __construct(
         public string $data,
-    ) {}
+    ) {
+    }
 
     /**
      * Create a new instance of ExtensionRenegotiationInfo.

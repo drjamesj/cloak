@@ -13,7 +13,8 @@ class ExtendedMasterSecret extends BaseExtension
     public function __construct(
         public string $master_secret_data,
         public string $extended_master_secret_data,
-    ) {}
+    ) {
+    }
 
     /**
      * Create a new instance of ExtendedMasterSecret.

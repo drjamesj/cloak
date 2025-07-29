@@ -7,7 +7,6 @@ namespace Cloak\Tls\Enums;
 use Cloak\Tls\Handshake\Messages\ClientHello;
 use InvalidArgumentException;
 
-
 enum HandshakeType: int
 {
     case CLIENT_HELLO = 1;

@@ -237,7 +237,7 @@ class TlsClient
                     $this->server_hs_traffic_secret = $this->hkdf_expand_label($this->handshake_secret, "s hs traffic", $transcript_hash, 32);
                 }
             }
-        } else if (
+        } elseif (
             $record->fragment instanceof ApplicationData &&
             $record->fragment->record instanceof Handshake &&
             $record->fragment->record->msg instanceof Finished
@@ -252,7 +252,7 @@ class TlsClient
                 $messageData,
                 substr($content, $offset, 4 + $msgLength),
             );
-        } else if (
+        } elseif (
             $record->fragment instanceof ApplicationData &&
             $record->fragment->record instanceof Handshake
         ) {

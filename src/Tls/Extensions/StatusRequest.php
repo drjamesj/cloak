@@ -14,7 +14,8 @@ class StatusRequest extends BaseExtension
         public int $status_type,
         public int $responder_id_list_length,
         public int $request_extensions_length,
-    ) {}
+    ) {
+    }
 
     /**
      * Create a new instance of StatusRequest.

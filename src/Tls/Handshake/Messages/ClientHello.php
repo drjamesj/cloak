@@ -75,14 +75,14 @@ class ClientHello extends BaseMessage
 
     private function cipherSuitesToBytes(): string
     {
-        $cipherSuiteList = implode(array_map(fn(CipherSuite|GreaseValue $cipherSuite) => uint16($cipherSuite->value), $this->cipher_suites));
+        $cipherSuiteList = implode(array_map(fn (CipherSuite|GreaseValue $cipherSuite) => uint16($cipherSuite->value), $this->cipher_suites));
 
         return uint16(strlen($cipherSuiteList)) . $cipherSuiteList;
     }
 
     private function extensionsToBytes(): string
     {
-        $extensionsList = implode(array_map(fn(BaseExtension $extension) => $extension->toBytes(), $this->extensions));
+        $extensionsList = implode(array_map(fn (BaseExtension $extension) => $extension->toBytes(), $this->extensions));
 
         return uint16(strlen($extensionsList)) . $extensionsList;
     }

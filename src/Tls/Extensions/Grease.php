@@ -14,7 +14,7 @@ class Grease
 
     public static function randomGreaseValue(): GreaseValue
     {
-        $values = array_map(fn(GreaseValue $value) => $value->value, GreaseValue::cases());
+        $values = array_map(fn (GreaseValue $value) => $value->value, GreaseValue::cases());
 
         $available = array_diff($values, self::$used);
 
@@ -40,7 +40,7 @@ class Grease
 
     public static function extension(): BaseExtension
     {
-        return new class(self::randomGreaseValue()) extends BaseExtension {
+        return new class (self::randomGreaseValue()) extends BaseExtension {
             public function __construct(
                 public readonly GreaseValue $grease_value,
             ) {
@@ -60,7 +60,7 @@ class Grease
      * Randomises the given extensions by adding a GREASE value to each.
      *
      * @param \Cloak\Tls\Extensions\BaseExtension ...$extensions
-     * 
+     *
      * @return \Cloak\Tls\Extensions\BaseExtension[]
      */
     public static function randomiseExtensions(...$extensions): array

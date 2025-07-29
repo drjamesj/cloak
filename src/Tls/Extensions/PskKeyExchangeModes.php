@@ -12,7 +12,8 @@ class PskKeyExchangeModes extends BaseExtension
 
     public function __construct(
         public int $PSK_Key_Exchange_Mode,
-    ) {}
+    ) {
+    }
 
     /**
      * Create a new instance of PskKeyExchangeModes.

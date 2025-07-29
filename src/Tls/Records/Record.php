@@ -85,14 +85,14 @@ class Record implements HasBytes
                 fragment: Handshake::fromBytes($fragment),
                 rawFragment: $rawFragment,
             );
-        } else if ($type === ContentType::CHANGE_CIPHER_SPEC) {
+        } elseif ($type === ContentType::CHANGE_CIPHER_SPEC) {
             return new self(
                 type: $type,
                 legacy_record_version: ProtocolVersion::from($legacy_record_version),
                 fragment: ChangeCipherSpec::fromBytes($fragment),
                 rawFragment: $rawFragment,
             );
-        } else if ($type === ContentType::APPLICATION_DATA) {
+        } elseif ($type === ContentType::APPLICATION_DATA) {
             return new self(
                 type: $type,
                 legacy_record_version: ProtocolVersion::from($legacy_record_version),
