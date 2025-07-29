@@ -15,6 +15,7 @@ use Cloak\Tls\Handshake\Messages\Certificate;
 use Cloak\Tls\Handshake\Messages\CertificateVerify;
 use Cloak\Tls\Handshake\Messages\EncryptedExtensions;
 use Cloak\Tls\Handshake\Messages\Finished;
+use Cloak\Tls\Handshake\Messages\NewSessionTicket;
 use Cloak\Tls\Traits\CanCreateRecord;
 
 class Handshake extends TLSPlaintext
@@ -55,6 +56,7 @@ class Handshake extends TLSPlaintext
                 HandshakeType::ENCRYPTED_EXTENSIONS => EncryptedExtensions::fromBytes(substr($fragment, 4)),
                 HandshakeType::CERTIFICATE => Certificate::fromBytes(substr($fragment, 4)),
                 HandshakeType::CERTIFICATE_VERIFY => CertificateVerify::fromBytes(substr($fragment, 4)),
+                HandshakeType::NEW_SESSION_TICKET => NewSessionTicket::fromBytes(substr($fragment, 4)),
                 HandshakeType::FINISHED => Finished::fromBytes(substr($fragment, 4)),
                 default => throw new InvalidArgumentException("Unsupported handshake type: {$type->value}"),
             },

@@ -6,8 +6,8 @@ namespace Cloak\Tls\Enums;
 
 enum NamedGroup: int
 {
-    case SECP256R1 = 0x0017;
-    case SECP384R1 = 0x0018;
+    case SECP256R1 = 0x0017; // P-256
+    case SECP384R1 = 0x0018; // P-384
     case SECP521R1 = 0x0019;
     case X25519 = 0x001D;
     case X448 = 0x001E;
@@ -17,4 +17,6 @@ enum NamedGroup: int
     case FFDHE4096 = 0x0102;
     case FFDHE6144 = 0x0103;
     case FFDHE8192 = 0x0104;
+
+    case X25519MLKEM768 = 0x11EC;
 }

@@ -24,7 +24,16 @@ echo $response->getHeader('content-type'); // application/json; charset=utf-8
 echo $response->getBody(); // '{...}'
 ```
 
+## Roadmap
+
+- [ ] HTTP/1.1 implementation
+- [ ] HTTP/2 implementation
+- [ ] Browser profiles
+
 ## Resources
 
 - [IETF RFC 8446 - The Transport Layer Security (TLS) Protocol Version 1.3](https://datatracker.ietf.org/doc/html/rfc8446)
 - [IETF RFC 8701 - Applying Generate Random Extensions And Sustain Extensibility (GREASE) to TLS Extensibility](https://datatracker.ietf.org/doc/html/rfc8701)
+- [Hybrid key exchange in TLS 1.3](https://datatracker.ietf.org/doc/draft-ietf-tls-hybrid-design/)
+- [IETF RFC 6962 - Certificate Transparency](https://datatracker.ietf.org/doc/html/rfc6962)
+- [IETF RFC 8879 - TLS Certificate Compression](https://datatracker.ietf.org/doc/html/rfc8879)

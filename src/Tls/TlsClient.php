@@ -14,11 +14,20 @@ use Cloak\Tls\Enums\NamedGroup;
 use Cloak\Tls\Enums\ProtocolVersion;
 use Cloak\Tls\Enums\SignatureAlgorithm;
 use Cloak\Tls\Extensions\ApplicationLayerProtocolNegotiation;
+use Cloak\Tls\Extensions\CompressCertificate;
+use Cloak\Tls\Extensions\EcPointFormats;
+use Cloak\Tls\Extensions\EncryptedClientHello;
+use Cloak\Tls\Extensions\ExtendedMasterSecret;
+use Cloak\Tls\Extensions\ExtensionRenegotiationInfo;
 use Cloak\Tls\Extensions\Grease;
 use Cloak\Tls\Extensions\KeyShare;
 use Cloak\Tls\Extensions\KeyShareEntry;
+use Cloak\Tls\Extensions\PskKeyExchangeModes;
 use Cloak\Tls\Extensions\ServerName;
+use Cloak\Tls\Extensions\SessionTicket;
 use Cloak\Tls\Extensions\SignatureAlgorithms;
+use Cloak\Tls\Extensions\SignedCertificateTimestamp;
+use Cloak\Tls\Extensions\StatusRequest;
 use Cloak\Tls\Extensions\SupportedGroups;
 use Cloak\Tls\Extensions\SupportedVersions;
 use Cloak\Tls\Records\Handshake;
@@ -27,6 +36,7 @@ use Cloak\Tls\Handshake\Messages\Finished;
 use Cloak\Tls\Handshake\Messages\ServerHello;
 use Cloak\Tls\Records\ApplicationData;
 use Cloak\Tls\Records\Record;
+use Exception;
 use InvalidArgumentException;
 use RuntimeException;
 
@@ -59,7 +69,7 @@ class TlsClient
     public function __construct(
         TcpClient $tcpClient,
         bool $isEnabled = true,
-        bool $logKeys = false,
+        bool $logKeys = true,
     ) {
         $this->isEnabled = $isEnabled;
         $this->logKeys = $logKeys;
@@ -395,6 +405,10 @@ class TlsClient
                     ),
                     KeyShare::make(
                         KeyShareEntry::make(
+                            NamedGroup::X25519MLKEM768,
+                            random_bytes(32 + 1184),
+                        ),
+                        KeyShareEntry::make(
                             NamedGroup::X25519,
                             $this->getClientPublicKey(),
                         ),
@@ -405,24 +419,36 @@ class TlsClient
                     ),
                     SignatureAlgorithms::make(
                         SignatureAlgorithm::ECDSA_SECP256R1_SHA256,
-                        SignatureAlgorithm::ECDSA_SECP384R1_SHA384,
-                        SignatureAlgorithm::ECDSA_SECP521R1_SHA512,
                         SignatureAlgorithm::RSA_PSS_RSAE_SHA256,
-                        SignatureAlgorithm::RSA_PSS_RSAE_SHA384,
-                        SignatureAlgorithm::RSA_PSS_RSAE_SHA512,
                         SignatureAlgorithm::RSA_PKCS1_SHA256,
+                        SignatureAlgorithm::ECDSA_SECP384R1_SHA384,
+                        SignatureAlgorithm::RSA_PSS_RSAE_SHA384,
                         SignatureAlgorithm::RSA_PKCS1_SHA384,
+                        SignatureAlgorithm::RSA_PSS_RSAE_SHA512,
                         SignatureAlgorithm::RSA_PKCS1_SHA512,
                     ),
                     SupportedGroups::make(
                         Grease::randomGreaseValue(),
+                        NamedGroup::X25519MLKEM768,
                         NamedGroup::X25519,
                         NamedGroup::SECP256R1,
+                        NamedGroup::SECP384R1,
                     ),
                     ApplicationLayerProtocolNegotiation::make([
                         // ApplicationLayerProtocol::HTTP_2,
                         ApplicationLayerProtocol::HTTP_1_1,
                     ]),
+                    SignedCertificateTimestamp::make(),
+                    EcPointFormats::make(0x00),
+                    ExtendedMasterSecret::make('', ''),
+                    PskKeyExchangeModes::make(0x01), // Enabling PSK results in a new session ticket message being received
+                    SessionTicket::make(''),
+                    ExtensionRenegotiationInfo::make(uint8(0x00)),
+                    CompressCertificate::make(
+                        0x02, // 0x02 is the compression method for "brotli"
+                    ),
+                    EncryptedClientHello::makeGrease(),
+                    StatusRequest::make(),
                 ),
             );
 

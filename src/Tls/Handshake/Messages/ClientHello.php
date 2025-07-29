@@ -16,7 +16,7 @@ class ClientHello extends BaseMessage
         public ProtocolVersion $legacy_version,
         public string $random,
         public string $legacy_session_id,
-        /** @var \Cloak\Tls\Enums\CipherSuite[] */
+        /** @var (\Cloak\Tls\Enums\CipherSuite|\Cloak\Tls\Enums\GreaseValue)[] */
         public array $cipher_suites = [],
         /** @var \Cloak\Tls\Extensions\BaseExtension[] */
         public array $extensions = [],
@@ -36,7 +36,7 @@ class ClientHello extends BaseMessage
     }
 
     /**
-     * @param \Cloak\Tls\Enums\CipherSuite ...$cipher_suites
+     * @param \Cloak\Tls\Enums\CipherSuite|\Cloak\Tls\Enums\GreaseValue ...$cipher_suites
      */
     public function withCipherSuites(...$cipher_suites): self
     {

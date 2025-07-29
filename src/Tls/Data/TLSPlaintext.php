@@ -11,10 +11,12 @@ use Cloak\Tls\Records\Record;
 
 class TLSPlaintext implements HasBytes
 {
+    public string $data = '';
+
     public function __construct(
-        public string $data,
+        string $data,
     ) {
-        //
+        $this->data = $data;
     }
 
     public function toRecord(): Record
